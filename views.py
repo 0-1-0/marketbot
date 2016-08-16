@@ -4,6 +4,7 @@ import gevent
 from gevent import monkey; monkey.patch_all()
 from telebot import types
 import telebot
+from telebot import apihelper
 from validate_email import validate_email
 import pymongo
 from datetime import datetime
@@ -707,8 +708,42 @@ class BotSettingsView(NavigationView):
         self.views = {}
         for bot in self.ctx.db.bots.find({'chat_id': self.ctx.chat_id}):
             self.links[bot['username']] = ['settings_view', bot['token']]
-        self.links['Главное меню'] = ['main_view']
+            self.links['Главное меню'] = ['main_view']
         super(BotSettingsView, self).activate()
+
+
+class SelectBotMailingView(NavigationView):
+
+    def get_subview(self, token):
+        if token not in self.views:
+            self.views[token] = MailingView(self.ctx, token)
+        return super(SelectBotMailingView, self).get_subview(token)
+
+    def activate(self):
+        self.links = {}
+        self.views = {}
+        for bot in self.ctx.db.bots.find({'chat_id': self.ctx.chat_id}):
+            self.links[bot['username']] = ['mailing_view', bot['token']]
+            self.links['Главное меню'] = ['main_view']
+        super(SelectBotMailingView, self).activate()
+
+
+class MailingView(NavigationView):
+    def __init__(self, ctx, bot_token):
+        self.ctx = ctx
+        self.token = bot_token
+        self.editable = True
+        self.msg = 'Введите текст рассылки'
+        self.links = {"Назад": ['mailing_view'],
+                      "Главное меню": ['main_view']
+                      }
+
+    def process_message(self, message):
+        if message in self.links:
+            self.ctx.route(self.links[message])
+        else:
+            for convo in self.ctx.db.convos.find({'bot_token': self.token}):
+                gevent.spawn(apihelper.send_message, self.token, convo['chat_id'], message, reply_markup=None, parse_mode='HTML')
 
 
 class SelectBotOrdersView(NavigationView):
@@ -721,6 +756,7 @@ class SelectBotOrdersView(NavigationView):
         self.views = {}
         bots = self.ctx.db.bots.find({'chat_id': self.ctx.chat_id})
         self.links = {bot['username']: ['select_bot_orders_view', bot['token']] for bot in bots}
+        self.links['Главное меню'] = ['main_view']
         super(SelectBotOrdersView, self).activate()
 
 

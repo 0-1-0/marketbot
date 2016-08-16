@@ -98,7 +98,8 @@ class MainConvo(Convo):
                 "Добавить магазин": ['add_view'],
                 "Настройки": ['settings_view'],
                 "Заказы": ['select_bot_orders_view'],
-                "Помощь": ['help_view']
+                "Помощь": ['help_view'],
+                "Рассылка новостей": ['mailing_view']
             },
             msg="Главное меню"
         )
@@ -113,6 +114,7 @@ class MainConvo(Convo):
         ], final_message='Магазин создан!')
         self.views['settings_view'] = BotSettingsView(self, msg='Настройки', links={'Главное меню': ['main_view']})
         self.views['select_bot_orders_view'] = SelectBotOrdersView(self, msg='Выберите магазин')
+        self.views['mailing_view'] = SelectBotMailingView(self, msg='Рассылка новостей', links={'Главное меню': ['main_view']})
         self.path = data.get('path')
         if not self.get_current_view():
             self.route(['main_view'])
