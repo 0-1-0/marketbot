@@ -16,7 +16,7 @@ idna==2.1
 ipaddress==1.0.16
 keyring==9.1
 kombu==3.0.35
-lxml==3.6.0
+lxml==4.6.5
 mongoengine==0.10.6
 ndg-httpsclient==0.4.1
 numpy==1.11.1
