@@ -19,7 +19,7 @@ kombu==3.0.35
 lxml==3.6.0
 mongoengine==0.10.6
 ndg-httpsclient==0.4.1
-numpy==1.11.1
+numpy==1.22.0
 pandas==0.18.1
 profilehooks==1.8.1
 pyasn1==0.1.9
