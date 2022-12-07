@@ -1,7 +1,7 @@
 anyjson==0.3.3
 backports-abc==0.4
 billiard==3.3.0.23
-certifi==2016.8.2
+certifi==2022.12.7
 cffi==1.7.0
 cryptography==1.4
 EasyProcess==0.2.2
